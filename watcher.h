@@ -11,17 +11,18 @@ class Watcher
     int* rtVec;
 
     bool started;
-    int hazardRaW;
+    int hazardRaW5;
 
   public:
     Watcher();
     void start();
     void finish();
     void registerInstruction(int rs, int rt, int rd);
-    void checkForHazard();
+    void checkForHazard5();
     void branchInstruction(int oldpc, int newpc, int intendedPC);
     void pushToVector(int reg, int* vec, int size);
     int* startVector(int size);
+    bool findInVec (int* vec, int val, int minDep, int maxDep);
 };
 
 #endif
