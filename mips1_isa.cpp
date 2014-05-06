@@ -56,6 +56,7 @@ using namespace mips1_parms;
 void ac_behavior( instruction )
 { 
   dbg_printf("----- PC=%#x ----- %lld\n", (int) ac_pc, ac_instr_counter);
+  w.anyInstrucion(ac_pc);
   //  dbg_printf("----- PC=%#x NPC=%#x ----- %lld\n", (int) ac_pc, (int)npc, ac_instr_counter);
 #ifndef NO_NEED_PC_UPDATE
   ac_pc = npc;

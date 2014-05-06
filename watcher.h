@@ -10,8 +10,11 @@ class Watcher
     int* rsVec;
     int* rtVec;
 
+    int instructionCount;
+    int actualPC;
+
     bool started;
-    int hazardRaW5;
+    int hazardRaW5, hazardWaW5;
 
   public:
     Watcher();
@@ -23,6 +26,7 @@ class Watcher
     void pushToVector(int reg, int* vec, int size);
     int* startVector(int size);
     bool findInVec (int* vec, int val, int minDep, int maxDep);
+    void anyInstrucion(int pc);
 };
 
 #endif

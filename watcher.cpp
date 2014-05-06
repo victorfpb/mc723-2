@@ -6,6 +6,9 @@
 Watcher::Watcher() {
   started = false;
   hazardRaW5 = 0;
+  hazardWaW5 = 0;
+  instructionCount = 0;
+  actualPC = 0;
 }
 
 void Watcher::start(){
@@ -18,7 +21,10 @@ void Watcher::start(){
 
 void Watcher::finish(){
   printf("\n\n");
+  printf("Total instructions = %d\n", instructionCount);
+  printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
   printf("RaW HAZARDS (5 stages) = %d\n", hazardRaW5);
+  printf("WaW HAZARDS (5 stages) = %d\n", hazardWaW5);
   printf("\n\n");
 }
 
@@ -34,9 +40,12 @@ void Watcher::branchInstruction(int oldpc, int newpc, int intendedPC) {
 
 void Watcher::checkForHazard5() {
 
-  // RaW HAZARD
+  // Simple RaW HAZARD
   if (findInVec(rdVec, rsVec[0], 1, 1)) hazardRaW5++;
   else if (findInVec(rdVec, rtVec[0], 1, 1)) hazardRaW5++;
+
+  // Simple WaW HAZARD
+  if (findInVec(rdVec, rdVec[0], 1, 1)) hazardWaW5++;
 }
 
 void Watcher::pushToVector(int reg, int* vec, int size) {
@@ -60,4 +69,9 @@ bool Watcher::findInVec (int* vec, int val, int minDep, int maxDep) {
      if (vec[i] == val) return true;
   }
   return false;
+}
+
+void Watcher::anyInstrucion(int pc) {
+  actualPC = pc;
+  instructionCount++;
 }
