@@ -18,7 +18,7 @@ void Watcher::start(){
 
 void Watcher::finish(){
   printf("\n\n");
-  printf("RaW HAZARDS = %d\n", hazardRaW);
+  printf("RaW HAZARDS (5 stages) = %d\n", hazardRaW5);
   printf("\n\n");
 }
 
@@ -54,7 +54,7 @@ int* Watcher::startVector(int size){
   return vec;
 }
 
-bool findInVec (int* vec, int val, int minDep, int maxDep) {
+bool Watcher::findInVec (int* vec, int val, int minDep, int maxDep) {
   if (val == 0) return false;
   for (int i = minDep; i<=maxDep; i++) {
      if (vec[i] == val) return true;
