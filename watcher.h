@@ -6,9 +6,9 @@
 class Watcher
 {
   private:
-    int* rdVec;
-    int* rsVec;
-    int* rtVec;
+    int* writeVec;
+    int* read1Vec;
+    int* read2Vec;
 
     int instructionCount;
     int actualPC;
@@ -20,7 +20,7 @@ class Watcher
     Watcher();
     void start();
     void finish();
-    void registerInstruction(int rs, int rt, int rd);
+    void registerInstruction(int write, int read1, int read2);
     void checkForHazard5();
     void branchInstruction(int oldpc, int newpc, int intendedPC);
     void pushToVector(int reg, int* vec, int size);

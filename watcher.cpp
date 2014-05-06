@@ -13,9 +13,9 @@ Watcher::Watcher() {
 
 void Watcher::start(){
   if (started) return;
-  rdVec = startVector(WATCHER_VEC_SIZE);
-  rsVec = startVector(WATCHER_VEC_SIZE);
-  rtVec = startVector(WATCHER_VEC_SIZE);
+  writeVec = startVector(WATCHER_VEC_SIZE);
+  read1Vec = startVector(WATCHER_VEC_SIZE);
+  read2Vec = startVector(WATCHER_VEC_SIZE);
   started = true;
 }
 
@@ -24,14 +24,14 @@ void Watcher::finish(){
   printf("Total instructions = %d\n", instructionCount);
   printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
   printf("RaW HAZARDS (5 stages) = %d\n", hazardRaW5);
-  printf("WaW HAZARDS (5 stages) = %d\n", hazardWaW5);
+  printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
   printf("\n\n");
 }
 
-void Watcher::registerInstruction(int rd, int rs, int rt	) {
-  pushToVector(rd, rdVec, WATCHER_VEC_SIZE);
-  pushToVector(rs, rsVec, WATCHER_VEC_SIZE);
-  pushToVector(rt, rtVec, WATCHER_VEC_SIZE);
+void Watcher::registerInstruction(int write, int read1, int read2) {
+  pushToVector(write, writeVec, WATCHER_VEC_SIZE);
+  pushToVector(read1, read1Vec, WATCHER_VEC_SIZE);
+  pushToVector(read2, read2Vec, WATCHER_VEC_SIZE);
   checkForHazard5();
 }
 
@@ -41,11 +41,11 @@ void Watcher::branchInstruction(int oldpc, int newpc, int intendedPC) {
 void Watcher::checkForHazard5() {
 
   // Simple RaW HAZARD
-  if (findInVec(rdVec, rsVec[0], 1, 1)) hazardRaW5++;
-  else if (findInVec(rdVec, rtVec[0], 1, 1)) hazardRaW5++;
+  if (findInVec(writeVec, read1Vec[0], 1, 1)) hazardRaW5++;
+  else if (findInVec(writeVec, read2Vec[0], 1, 1)) hazardRaW5++;
 
   // Simple WaW HAZARD
-  if (findInVec(rdVec, rdVec[0], 1, 1)) hazardWaW5++;
+  if (findInVec(writeVec, writeVec[0], 1, 1)) hazardWaW5++;
 }
 
 void Watcher::pushToVector(int reg, int* vec, int size) {
