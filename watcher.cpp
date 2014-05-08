@@ -67,11 +67,11 @@ void Watcher::checkForHazard7() {
   if (findInVec(writeVec, writeVec[0], 1, 2)) hazardWaW7++;
 }
 
-void Watcher::checkForControlHazard(); {
+void Watcher::checkForControlHazard() {
 
-  // Simple Control Hazard
-  if (!findInVec(writeVec, read1Vec[0], 1, writeVec.size())) controlHazard++;
-  else if (!findInVec(writeVec, read2Vec[0], 1, writeVec.size())) controlHazard++;
+//  Simple Control Hazard
+//  if (!findInVec(writeVec, read1Vec[0], 1, WATCHER_VEC_SIZE-1)) controlHazard++;
+//  else if (!findInVec(writeVec, read2Vec[0], 1, WATCHER_VEC_SIZE-1)) controlHazard++;
 
 }
 
