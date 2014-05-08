@@ -30,7 +30,7 @@ void Watcher::finish(){
   printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
   printf("RaW HAZARDS (7 stages) = %d\n", hazardRaW7);
   printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
-  printf("Control HAZARDS = %d\n", controlHazard);
+  printf("Control HAZARDS = %d\n", controlHazards);
   printf("\n\n");
 }
 
