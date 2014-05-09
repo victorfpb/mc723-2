@@ -66,13 +66,13 @@ void ac_behavior( instruction )
 
 //! Instruction Format behavior methods.
 void ac_behavior( Type_R ){
-  w.registerInstruction(rd,rs,rt);
+  //w.registerInstruction(rd,rs,rt);
 }
 void ac_behavior( Type_I ){
-  w.registerInstruction(rt,rs,0);
+  //w.registerInstruction(rt,rs,0);
 }
 void ac_behavior( Type_J ){
-  w.registerInstruction(0,0,0);
+  //w.registerInstruction(0,0,0);
 }
 
 //!Behavior called before starting simulation
