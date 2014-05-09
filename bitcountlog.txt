@@ -1,0 +1,38 @@
+bitcnts 1000
+
+***Using the Bimodal Predictor:***
+Number of correct branch guesses: 31354
+Number of incorrect branch guesses: 62502
+Guess rate: 0.334065
+***Using the Onelevel Predictor:***
+Number of correct branch guesses: 88658
+Number of incorrect branch guesses: 5198
+Guess rate: 0.944617
+
+
+5 stage pipeline:
+	Load-Use hazards add 0 cycles
+	Bimodal branch prediction misses add 62502 cycles
+
+	Total cycles for scalar pipeline: 705830
+
+
+7 stage pipeline:
+	Load-Use hazards add 17351 cycles
+	Bimodal branch prediction misses add 62502 cycles
+
+	Total cycles for scalar pipeline: 723183
+
+
+13 stage pipeline:
+	Load-Use\RaW hazards add 546259 cycles
+	Bimodal branch prediction misses add 125004 cycles
+
+	Total cycles for scalar pipeline: 1314599
+
+Info: /OSCI/SystemC: Simulation stopped by user.
+ArchC: Simulation statistics
+    Times: 0.06 user, 0.00 system, 0.06 real
+    Number of instructions executed: 643354
+    Simulation speed: 10722.57 K instr/s
+

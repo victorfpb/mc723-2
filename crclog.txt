@@ -1,0 +1,43 @@
+
+***Using the Bimodal Predictor:***
+Number of correct branch guesses: 2744829
+Number of incorrect branch guesses: 8307
+Guess rate: 0.996983
+crc_32 CRC32/input/small.pcm
+
+***Using the Bimodal Predictor:***
+Number of correct branch guesses: 2744829
+Number of incorrect branch guesses: 8307
+Guess rate: 0.996983
+***Using the Onelevel Predictor:***
+Number of correct branch guesses: 2747525
+Number of incorrect branch guesses: 5611
+Guess rate: 0.997962
+
+
+5 stage pipeline:
+	Load-Use hazards add 0 cycles
+	Bimodal branch prediction misses add 8307 cycles
+
+	Total cycles for scalar pipeline: 31649703
+
+
+7 stage pipeline:
+	Load-Use hazards add 6853926 cycles
+	Bimodal branch prediction misses add 8307 cycles
+
+	Total cycles for scalar pipeline: 38503631
+
+
+13 stage pipeline:
+	Load-Use\RaW hazards add 28832662 cycles
+	Bimodal branch prediction misses add 16614 cycles
+
+	Total cycles for scalar pipeline: 60490680
+
+Info: /OSCI/SystemC: Simulation stopped by user.
+ArchC: Simulation statistics
+    Times: 2.90 user, 0.00 system, 2.96 real
+    Number of instructions executed: 31642738
+    Simulation speed: 10911.29 K instr/s
+
