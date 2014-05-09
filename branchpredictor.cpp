@@ -10,6 +10,10 @@ void State::taken(){
 	updateGuessing();
 }
 
+int State::getState(){
+	return state;
+}
+
 void State::notTaken(){
 	if(state!=3)	state++;
 	updateGuessing();
@@ -52,7 +56,7 @@ void bimodalPredictor::update(bool path){
 }
 
 double bimodalPredictor::getGuessRate(){
-	return (numRightGuess/(numRightGuess+numWrongGuess));
+	return ((double)numRightGuess/(double)(numRightGuess+numWrongGuess));
 }
 
 oneLevelPredictor::oneLevelPredictor(){
@@ -68,12 +72,12 @@ int oneLevelPredictor::getNumRightGuess(){
 }
 
 void oneLevelPredictor::updateState(bool path, int offset){
-	if(path)	table[offset && 0xFFFF].taken();
-	else 		table[offset && 0xFFFF].notTaken();	
+	if(path)	table[offset & (ONELEVELTABLESIZE-1)].taken();
+	else 		table[offset & (ONELEVELTABLESIZE-1)].notTaken();	
 }
 
 void oneLevelPredictor::updateGuess(bool path, int offset){
-	if(table[offset && 0xFFFF].guess()==path)	numRightGuess++;
+	if(table[offset & (ONELEVELTABLESIZE-1)].guess()==path)	numRightGuess++;
 	else			numWrongGuess++;
 }
 
@@ -83,7 +87,7 @@ void oneLevelPredictor::update(bool path, int offset){
 }
 
 double oneLevelPredictor::getGuessRate(){
-	return (numRightGuess/(numRightGuess+numWrongGuess));
+	return ((double)numRightGuess/(double)(numRightGuess+numWrongGuess));
 }
 
 predictor::predictor(){
