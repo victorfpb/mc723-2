@@ -5,11 +5,15 @@
 
 Watcher::Watcher() {
   started = false;
+
   hazardRaW5 = 0;
   hazardWaW5 = 0;
+  hazardLU5 = 0;
+
   hazardRaW7 = 0;
   hazardRaW7x2 = 0;
   hazardWaW7 = 0;
+
   controlHazard = 0;
   instructionCount = 0;
   actualPC = 0;
@@ -20,6 +24,7 @@ void Watcher::start(){
   writeVec = startVector(WATCHER_VEC_SIZE);
   read1Vec = startVector(WATCHER_VEC_SIZE);
   read2Vec = startVector(WATCHER_VEC_SIZE);
+  loadVec = startVector(WATCHER_VEC_SIZE);
   started = true;
 }
 
@@ -28,17 +33,34 @@ void Watcher::finish(){
   printf("Total instructions = %d\n", instructionCount);
   printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
   printf("RaW HAZARDS cycles (5 stages) = %d\n", hazardRaW5);
-  //printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
+  printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
   printf("RaW HAZARDS cycles (7 stages) = %d\n", hazardRaW7+(2*hazardRaW7x2));
-  //printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
+  printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
   //printf("Control HAZARDS = %d\n", controlHazard);
   printf("\n\n");
+  free(writeVec);
+  free(read1Vec);
+  free(read2Vec);
+  free(loadVec);
 }
 
-void Watcher::registerInstruction(int write, int read1, int read2) {
+void Watcher::updateRegs(int rd, int rs, int rt, ins_types type) {
+  if (type == TYPE_R) {
+    registerInstruction(rd, rs, rt, 0);
+  } else if (type == TYPE_I) {
+    registerInstruction(rt, rs, 0, 0);
+  } else if (type == TYPE_J) {
+    registerInstruction(0, 0, 0, 0);
+  } else if (type == TYPE_LW) {
+    registerInstruction(rd, rs, rt, rd);
+  }
+}
+
+void Watcher::registerInstruction(int write, int read1, int read2, int load) {
   pushToVector(write, writeVec, WATCHER_VEC_SIZE);
   pushToVector(read1, read1Vec, WATCHER_VEC_SIZE);
   pushToVector(read2, read2Vec, WATCHER_VEC_SIZE);
+  pushToVector(load, loadVec, WATCHER_VEC_SIZE);
   checkForHazard5();
   checkForHazard7();
   checkForControlHazard();
