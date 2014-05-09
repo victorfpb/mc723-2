@@ -14,7 +14,7 @@ class Watcher
     int actualPC;
 
     bool started;
-    int hazardRaW5, hazardWaW5, hazardRaW7, hazardWaW7, controlHazard;
+    int hazardRaW5, hazardWaW5, hazardRaW7, hazardRaW7x2, hazardWaW7, controlHazard;
 
   public:
     Watcher();
