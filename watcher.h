@@ -4,10 +4,10 @@
 #define WATCHER_VEC_SIZE 13
 
 typedef enum enum_ins_types {
-  TYPE_I,
-  TYPE_R,
-  TYPE_J,
-  TYPE_LW
+  TIPO_I,
+  TIPO_R,
+  TIPO_J,
+  TIPO_LW
 } ins_types;
 
 class Watcher

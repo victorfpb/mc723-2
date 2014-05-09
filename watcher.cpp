@@ -33,9 +33,9 @@ void Watcher::finish(){
   printf("Total instructions = %d\n", instructionCount);
   printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
   printf("RaW HAZARDS cycles (5 stages) = %d\n", hazardRaW5);
-  printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
+  //printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
   printf("RaW HAZARDS cycles (7 stages) = %d\n", hazardRaW7+(2*hazardRaW7x2));
-  printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
+  //printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
   //printf("Control HAZARDS = %d\n", controlHazard);
   printf("\n\n");
   free(writeVec);
@@ -45,14 +45,14 @@ void Watcher::finish(){
 }
 
 void Watcher::updateRegs(int rd, int rs, int rt, ins_types type) {
-  if (type == TYPE_R) {
+  if (type == TIPO_R) {
     registerInstruction(rd, rs, rt, 0);
-  } else if (type == TYPE_I) {
+  } else if (type == TIPO_I) {
     registerInstruction(rt, rs, 0, 0);
-  } else if (type == TYPE_J) {
+  } else if (type == TIPO_J) {
     registerInstruction(0, 0, 0, 0);
-  } else if (type == TYPE_LW) {
-    registerInstruction(rd, rs, rt, rd);
+  } else if (type == TIPO_LW) {
+    registerInstruction(rt, rs, 0, rt);
   }
 }
 
