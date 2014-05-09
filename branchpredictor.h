@@ -22,6 +22,7 @@ class State {
 	void taken();
 	void notTaken();
 	bool guess();
+	int getState();
 };
 
 class bimodalPredictor {
@@ -34,7 +35,6 @@ class bimodalPredictor {
 	void updateGuess(bool path);
 	void updateState(bool path);
 
-	
 	public:
 	bimodalPredictor();
 

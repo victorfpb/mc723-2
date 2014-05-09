@@ -96,6 +96,7 @@ void ac_behavior(end)
 {
   dbg_printf("@@@ end behavior @@@\n");
   w.finish();
+  pred.end();
 }
 
 
