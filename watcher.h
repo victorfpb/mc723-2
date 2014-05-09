@@ -3,10 +3,18 @@
 
 #define WATCHER_VEC_SIZE 13
 
+typedef enum enum_ins_types {
+  TYPE_I,
+  TYPE_R,
+  TYPE_J,
+  TYPE_LW
+} ins_types;
+
 class Watcher
 {
   private:
     int* writeVec;
+    int* loadVec;
     int* read1Vec;
     int* read2Vec;
 
@@ -14,13 +22,9 @@ class Watcher
     int actualPC;
 
     bool started;
-    int hazardRaW5, hazardWaW5, hazardRaW7, hazardRaW7x2, hazardWaW7, controlHazard;
+    int hazardRaW5, hazardWaW5, hazardRaW7, hazardRaW7x2, hazardWaW7, controlHazard, hazardLU5;
 
-  public:
-    Watcher();
-    void start();
-    void finish();
-    void registerInstruction(int write, int read1, int read2);
+    void registerInstruction(int write, int read1, int read2, int load);
     void checkForHazard5();
     void checkForHazard7();
     void checkForControlHazard();
@@ -28,6 +32,14 @@ class Watcher
     void pushToVector(int reg, int* vec, int size);
     int* startVector(int size);
     bool findInVec (int* vec, int val, int minDep, int maxDep);
+
+  public:
+    Watcher();
+    void start();
+    void finish();
+    void updateRegs(int rd, int rs, int rt, ins_types type);
+
+
     void anyInstrucion(int pc);
 };
 
