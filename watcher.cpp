@@ -14,6 +14,10 @@ Watcher::Watcher() {
   hazardRaW7x2 = 0;
   hazardWaW7 = 0;
 
+  hazardRaW13x3 = 0;
+  hazardRaW13x2 = 0;
+  hazardRaW13 = 0;
+
   controlHazard = 0;
   instructionCount = 0;
   actualPC = 0;
@@ -31,12 +35,18 @@ void Watcher::start(){
 void Watcher::finish(){
   printf("\n\n");
   printf("Total instructions = %d\n", instructionCount);
-  printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
-  printf("RaW HAZARDS cycles (5 stages) = %d\n", hazardRaW5);
-  //printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
-  printf("RaW HAZARDS cycles (7 stages) = %d\n", hazardRaW7+(2*hazardRaW7x2));
-  //printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
-  //printf("Control HAZARDS = %d\n", controlHazard);
+
+  printf("5 stage pipeline:\n");
+  printf("\tLoad-Use hazards add %d cycles\n", hazardLU5);
+
+  printf("\n");
+  printf("7 stage pipeline:\n");
+  printf("\tLoad-Use hazards add %d cycles\n", hazardLU7+(2*hazardLU7x2));
+
+  printf("\n");
+  printf("13 stage pipeline:\n");
+  printf("\tLoad-Use\\RaW hazards add %d cycles\n", hazardRaW13+(2*hazardRaW13x2)+(3*hazardRaW13x3));
+
   printf("\n\n");
   free(writeVec);
   free(read1Vec);
@@ -45,6 +55,7 @@ void Watcher::finish(){
 }
 
 void Watcher::updateRegs(int rd, int rs, int rt, ins_types type) {
+  //printf("RD = %d, RS = %d, RT = %d",rd,rs,rt);
   if (type == TIPO_R) {
     registerInstruction(rd, rs, rt, 0);
   } else if (type == TIPO_I) {
@@ -63,6 +74,7 @@ void Watcher::registerInstruction(int write, int read1, int read2, int load) {
   pushToVector(load, loadVec, WATCHER_VEC_SIZE);
   checkForHazard5();
   checkForHazard7();
+  checkForHazard13();
   checkForControlHazard();
 }
 
@@ -75,22 +87,41 @@ void Watcher::checkForHazard5() {
   if (findInVec(writeVec, read1Vec[0], 1, 1)) hazardRaW5++;
   else if (findInVec(writeVec, read2Vec[0], 1, 1)) hazardRaW5++;
 
+  // Simple LU HAZARD
+  if (findInVec(loadVec, read1Vec[0], 1, 1)) hazardLU5++;
+  else if (findInVec(loadVec, read2Vec[0], 1, 1)) hazardLU5++;
+
   // Simple WaW HAZARD
   if (findInVec(writeVec, writeVec[0], 1, 1)) hazardWaW5++;
 }
-
 
 void Watcher::checkForHazard7() {
 
   // Simple RaW HAZARD
   if (findInVec(writeVec, read1Vec[0], 1, 1)) hazardRaW7x2++;
-  else if (findInVec(writeVec, read1Vec[0], 2, 2)) hazardRaW7++;
-
   else if (findInVec(writeVec, read2Vec[0], 1, 1)) hazardRaW7x2++;
+  else if (findInVec(writeVec, read1Vec[0], 2, 2)) hazardRaW7++;
   else if (findInVec(writeVec, read2Vec[0], 2, 2)) hazardRaW7++;
+
+  // Simple LU HAZARD
+  if (findInVec(loadVec, read1Vec[0], 1, 1)) hazardLU7x2++;
+  else if (findInVec(loadVec, read2Vec[0], 1, 1)) hazardLU7x2++;
+  else if (findInVec(loadVec, read1Vec[0], 2, 2)) hazardLU7++;
+  else if (findInVec(loadVec, read2Vec[0], 2, 2)) hazardLU7++;
 
   // Simple WaW HAZARD
   if (findInVec(writeVec, writeVec[0], 1, 2)) hazardWaW7++;
+}
+
+void Watcher::checkForHazard13() {
+
+  // Simple RaW HAZARD
+  if (findInVec(writeVec, read1Vec[0], 1, 1)) hazardRaW13x3++;
+  else if (findInVec(writeVec, read2Vec[0], 1, 1)) hazardRaW13x3++;
+  else if (findInVec(writeVec, read1Vec[0], 2, 2)) hazardRaW13x2++;
+  else if (findInVec(writeVec, read2Vec[0], 2, 2)) hazardRaW13x2++;
+  else if (findInVec(writeVec, read1Vec[0], 3, 3)) hazardRaW13++;
+  else if (findInVec(writeVec, read2Vec[0], 3, 3)) hazardRaW13++;
 }
 
 void Watcher::checkForControlHazard() {
@@ -103,9 +134,9 @@ void Watcher::checkForControlHazard() {
 
 void Watcher::pushToVector(int reg, int* vec, int size) {
   for (int i=(size-1); i>0; i--) {
-  	vec[i-1] = vec[i];
+  	vec[i] = vec[i-1];
   }
-  vec[0];
+  vec[0] = reg;
 }
 
 int* Watcher::startVector(int size){
@@ -127,4 +158,17 @@ bool Watcher::findInVec (int* vec, int val, int minDep, int maxDep) {
 void Watcher::anyInstrucion(int pc) {
   actualPC = pc;
   instructionCount++;
+  if (instructionCount%10 == 11) {
+    printVec(writeVec, WATCHER_VEC_SIZE);
+    printVec(read1Vec, WATCHER_VEC_SIZE);
+    printVec(read2Vec, WATCHER_VEC_SIZE);
+    printVec(loadVec, WATCHER_VEC_SIZE);
+  }
+}
+
+void Watcher::printVec(int* vec, int size) {
+  for (int i = 0; i < size; i++) {
+     printf("%2d ", vec[i]);
+  }
+  printf("\n");
 }
