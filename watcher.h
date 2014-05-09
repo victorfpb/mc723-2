@@ -1,5 +1,6 @@
 #ifndef WATCHER_H
 #define WATCHER_H
+#include "branchpredictor.h"
 
 #define WATCHER_VEC_SIZE 13
 
@@ -40,7 +41,7 @@ class Watcher
   public:
     Watcher();
     void start();
-    void finish();
+    void finish(predictor p);
     void updateRegs(int rd, int rs, int rt, ins_types type);
 
 

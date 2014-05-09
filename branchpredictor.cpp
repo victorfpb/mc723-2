@@ -106,6 +106,15 @@ double predictor::getOneLevelGuessRate(){
 	return onelev.getGuessRate();
 }
 
+
+int predictor::getBimodalNumWrongGuess(){
+	return bimod.getNumWrongGuess();
+}
+
+int predictor::getOneLevelNumWrongGuess(){
+	return onelev.getNumWrongGuess();
+}
+
 void predictor::end(){
 	printf("\n\n");
 	printf("***Using the Bimodal Predictor:***\n");

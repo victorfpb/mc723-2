@@ -73,6 +73,8 @@ class predictor {
 	void update(bool path, int offset);
 	double getBimodalGuessRate();
 	double getOneLevelGuessRate();
+	int getBimodalNumWrongGuess();
+	int getOneLevelNumWrongGuess();
 	void end();
 };
 

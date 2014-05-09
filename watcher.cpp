@@ -32,22 +32,35 @@ void Watcher::start(){
   started = true;
 }
 
-void Watcher::finish(){
+void Watcher::finish(predictor p){
   printf("\n\n");
-  printf("Total instructions = %d\n", instructionCount);
 
+  int cycles5 = instructionCount+4;
   printf("5 stage pipeline:\n");
-  printf("\tLoad-Use hazards add %d cycles\n", hazardLU5);
+  printf("\tLoad-Use hazards add %d cycles\n", hazardLU5); 
+  printf("\tBimodal branch prediction misses add %d cycles\n", p.getBimodalNumWrongGuess());
+  cycles5+=hazardLU5;
+  cycles5+=p.getBimodalNumWrongGuess();
+  printf("\n\tTotal cycles for scalar pipeline: %d\n\n", cycles5);
 
+  int cycles7 = instructionCount+6;
   printf("\n");
   printf("7 stage pipeline:\n");
   printf("\tLoad-Use hazards add %d cycles\n", hazardLU7+(2*hazardLU7x2));
+  printf("\tBimodal branch prediction misses add %d cycles\n", p.getBimodalNumWrongGuess());
+  cycles7+=(hazardLU7+(2*hazardLU7x2));
+  cycles7+=p.getBimodalNumWrongGuess();
+  printf("\n\tTotal cycles for scalar pipeline: %d\n\n", cycles7);
 
+  int cycles13 = instructionCount+12;
   printf("\n");
   printf("13 stage pipeline:\n");
   printf("\tLoad-Use\\RaW hazards add %d cycles\n", hazardRaW13+(2*hazardRaW13x2)+(3*hazardRaW13x3));
+  printf("\tBimodal branch prediction misses add %d cycles\n", 2*p.getBimodalNumWrongGuess());
+  cycles13+=(hazardRaW13+(2*hazardRaW13x2)+(3*hazardRaW13x3));
+  cycles13+=(2*p.getBimodalNumWrongGuess());
+  printf("\n\tTotal cycles for scalar pipeline: %d\n", cycles13);
 
-  printf("\n\n");
   free(writeVec);
   free(read1Vec);
   free(read2Vec);
