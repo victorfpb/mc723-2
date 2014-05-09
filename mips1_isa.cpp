@@ -71,7 +71,9 @@ void ac_behavior( Type_R ){
 void ac_behavior( Type_I ){
   w.registerInstruction(rt,rs,0);
 }
-void ac_behavior( Type_J ){}
+void ac_behavior( Type_J ){
+  w.registerInstruction(0,0,0);
+}
 
 //!Behavior called before starting simulation
 void ac_behavior(begin)

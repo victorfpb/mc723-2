@@ -8,6 +8,7 @@ Watcher::Watcher() {
   hazardRaW5 = 0;
   hazardWaW5 = 0;
   hazardRaW7 = 0;
+  hazardRaW7x2 = 0;
   hazardWaW7 = 0;
   controlHazard = 0;
   instructionCount = 0;
@@ -26,11 +27,11 @@ void Watcher::finish(){
   printf("\n\n");
   printf("Total instructions = %d\n", instructionCount);
   printf("Total cycles (5 stages, disregarding hazards)* = %d\n", instructionCount+4);
-  printf("RaW HAZARDS (5 stages) = %d\n", hazardRaW5);
-  printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
-  printf("RaW HAZARDS (7 stages) = %d\n", hazardRaW7);
-  printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
-  printf("Control HAZARDS = %d\n", controlHazard);
+  printf("RaW HAZARDS cycles (5 stages) = %d\n", hazardRaW5);
+  //printf("WaW HAZARDS (5 stages, disregarding everything)* = %d\n", hazardWaW5);
+  printf("RaW HAZARDS cycles (7 stages) = %d\n", hazardRaW7+(2*hazardRaW7x2));
+  //printf("WaW HAZARDS (7 stages, disregarding everything)* = %d\n", hazardWaW7);
+  //printf("Control HAZARDS = %d\n", controlHazard);
   printf("\n\n");
 }
 
@@ -60,8 +61,11 @@ void Watcher::checkForHazard5() {
 void Watcher::checkForHazard7() {
 
   // Simple RaW HAZARD
-  if (findInVec(writeVec, read1Vec[0], 1, 2)) hazardRaW7++;
-  else if (findInVec(writeVec, read2Vec[0], 1, 2)) hazardRaW7++;
+  if (findInVec(writeVec, read1Vec[0], 1, 1)) hazardRaW7x2++;
+  else if (findInVec(writeVec, read1Vec[0], 2, 2)) hazardRaW7++;
+
+  else if (findInVec(writeVec, read2Vec[0], 1, 1)) hazardRaW7x2++;
+  else if (findInVec(writeVec, read2Vec[0], 2, 2)) hazardRaW7++;
 
   // Simple WaW HAZARD
   if (findInVec(writeVec, writeVec[0], 1, 2)) hazardWaW7++;
